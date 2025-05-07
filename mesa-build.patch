@@ -1,0 +1,57 @@
+diff --git a/meson.build b/meson.build
+index cd802abeca5..d9ce4273318 100644
+--- a/meson.build
++++ b/meson.build
+@@ -85,6 +85,7 @@ with_aco_tests = get_option('build-aco-tests')
+ with_glx_read_only_text = get_option('glx-read-only-text')
+ with_glx_direct = get_option('glx-direct')
+ with_vulkan_overlay_layer = get_option('vulkan-layers').contains('overlay')
++with_vulkan_screen_border_layer = get_option('vulkan-layers').contains('screen-border')
+ with_vulkan_device_select_layer = get_option('vulkan-layers').contains('device-select')
+ with_vulkan_screenshot_layer = get_option('vulkan-layers').contains('screenshot')
+ with_vulkan_vram_report_limit_layer = get_option('vulkan-layers').contains('vram-report-limit')
+@@ -108,7 +109,7 @@ endif
+ 
+ with_any_vulkan_layers = get_option('vulkan-layers').length() != 0
+ with_intel_tools = with_tools.contains('intel') or with_tools.contains('intel-ui')
+-with_imgui = with_intel_tools or with_vulkan_overlay_layer
++with_imgui = with_intel_tools or with_vulkan_overlay_layer or with_vulkan_screen_border_layer
+ 
+ dri_drivers_path = get_option('dri-drivers-path')
+ if dri_drivers_path == ''
+@@ -634,7 +635,7 @@ endif
+ prog_glslang = find_program(
+   'glslangValidator',
+   native : true,
+-  required : with_vulkan_overlay_layer or with_aco_tests or with_amd_vk or with_intel_vk or with_swrast_vk or with_freedreno_vk
++  required : with_vulkan_overlay_layer or with_vulkan_screen_border_layer or with_aco_tests or with_amd_vk or with_intel_vk or with_swrast_vk or with_freedreno_vk
+ )
+ 
+ if prog_glslang.found()
+diff --git a/meson.options b/meson.options
+index e6c9567ade8..6b0ac40c1bd 100644
+--- a/meson.options
++++ b/meson.options
+@@ -281,7 +281,7 @@ option(
+   type : 'array',
+   value : [],
+   choices : [
+-    'device-select', 'intel-nullhw', 'overlay', 'screenshot', 
++    'device-select', 'intel-nullhw', 'overlay', 'screen-border', 'screenshot', 
+     'vram-report-limit',
+   ],
+   description : 'List of vulkan layers to build'
+diff --git a/src/vulkan/meson.build b/src/vulkan/meson.build
+index 3225b5f4a9d..e2448680d76 100644
+--- a/src/vulkan/meson.build
++++ b/src/vulkan/meson.build
+@@ -89,6 +89,9 @@ subdir('wsi')
+ if with_vulkan_overlay_layer
+   subdir('overlay-layer')
+ endif
++if with_vulkan_screen_border_layer
++  subdir('screen-border')
++endif
+ if with_vulkan_device_select_layer
+   subdir('device-select-layer')
+ endif
