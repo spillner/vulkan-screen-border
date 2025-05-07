@@ -77,7 +77,7 @@ The module has several runtime-adjustable parameters that can be controlled by t
   VK_LOADER_LAYERS_ENABLE=VK_LAYER_MESA_screen_border VK_LAYER_MESA_SCREEN_BORDER_CONFIG=color=orange,thickness=20 /path/to/my_vulkan_app
 
 
-  By default, the border will be white with a thickness of 10 pixels.  See `border_params.c` for more details on the options and syntax.
+By default, the border will be white with a thickness of 10 pixels.  See `border_params.c` for more details on the options and syntax.
 
 For Steam games (including Windows games run under Proton), you can insert the environment variable assignments above as part of the program's launch options, e.g.
 
